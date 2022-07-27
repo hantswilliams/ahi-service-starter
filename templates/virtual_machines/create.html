@@ -12,28 +12,68 @@
 
 {% block content %}
 <section class="p-2">
-  <form method="post">
-    <div class="mb-3">
-      <label for="vm-id" class="form-label">Name</label>
-      <input type="text" class="form-control" name="vm-id" id="vm-id" aria-describedby="nameHelp" required>
-      <div id="nameHelp" class="form-text">Choose a unique name as a label for your virtual machine</div>
-    </div>
-    <div class="mb-3">
-      <label for="vm-id" class="form-label">Instance Type</label>
-      <select name="instance_type" class="form-control" id="instance_type">
-      {% for instance_type in instance_types %}
-        <option value="{{ instance_type }}" {% if instance_type == curr_instance_type %} selected {% endif %}>
-          {{ instance_type }}
-        </option>
-      {% endfor %}
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="vm-keypair" class="form-label">Public Key</label>
-      <textarea class="form-control" name="vm-keypair" id="vm-keypair-content" rows="5" aria-describedby="keypairHelp"></textarea>
-      <div id="keypairHelp" class="form-text">The public key to use to connect to the VM </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-  </form>
+  <div id="content">
+    <form method="post">
+      <div class="mb-3">
+        <label for="vm-id" class="form-label">Name</label>
+        <input type="text" class="form-control" name="vm-id" id="vm-id" aria-describedby="nameHelp" required>
+        <div id="nameHelp" class="form-text">Choose a unique name as a label for your virtual machine</div>
+      </div>
+      <div class="mb-3">
+        <label for="vm-id" class="form-label">Instance Type</label>
+        <select name="instance_type" class="form-control" id="instance_type">
+        {% for instance_type in instance_types %}
+          <option value="{{ instance_type }}" {% if instance_type == curr_instance_type %} selected {% endif %}>
+            {{ instance_type }}
+          </option>
+        {% endfor %}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="vm-keypair" class="form-label">Public Key</label>
+        <textarea class="form-control" name="vm-keypair" id="vm-keypair-content" rows="5" aria-describedby="keypairHelp"></textarea>
+        <div id="keypairHelp" class="form-text">The public key to use to connect to the VM </div>
+      </div>
+      <button type="submit" class="btn btn-primary" onclick="clickme()">Create</button>
+    </form>
+
+      <div class="progress" style="width: 50%; margin: 50px;">
+          <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+              aria-valuemax="100" style="width: 0%">
+              <span class="progress-bar-label">Please wait (~60 seconds) for instance to start...</span>
+          </div>
+      </div>
+
+          <!-- Scripts -->
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <!-- <script>
+          var source = new EventSource("/vms/new");
+          source.onmessage = function (event) {
+              $('.progress-bar').css('width', event.data + '%').attr('aria-valuenow', event.data);
+              $('.progress-bar-label').text(event.data + '%');
+              if (event.data == 100) {
+                  source.close()
+                  // go to the new VM page
+                  window.location.href = "/vms/" + $('#vm-id').val();
+              }
+          }
+      </script> -->
+
+      <script>
+        function clickme(){
+          var div =$("<div class='progress-bar'></div>");
+          $("body").append(div);
+          $('.progress-bar').animate(
+            {
+              width: '100%'
+            }, 
+            {
+              duration: 60000, // approxiately 60 seconds (1 minute)      
+            }        
+          );
+        }     
+      </script>
+
+  </div>
 </section>
 {% endblock %}

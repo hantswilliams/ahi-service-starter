@@ -6,9 +6,10 @@ import pulumi_aws as aws
 import pulumi.automation as auto
 import os
 from pathlib import Path
+import time
 
 bp = Blueprint("virtual_machines", __name__, url_prefix="/vms")
-instance_types = ['c5.xlarge', 'p2.xlarge', 'p3.2xlarge']
+instance_types = ['t2.nano', 't2.micro']
 
 
 def create_pulumi_program(keydata: str, instance_type=str):
@@ -28,11 +29,13 @@ def create_pulumi_program(keydata: str, instance_type=str):
                                   )])
 
     public_key = keydata
-    if public_key is None or public_key == "":
-        home = str(Path.home())
-        f = open(os.path.join(home, '.ssh/id_rsa.pub'), 'r')
-        public_key = f.read()
-        f.close()
+
+    ## remove this bottom part since this will be deployed virtually 
+    # if public_key is None or public_key == "":
+    #     home = str(Path.home())
+    #     f = open(os.path.join(home, '.ssh/id_rsa.pub'), 'r')
+    #     public_key = f.read()
+    #     f.close()
 
     public_key = public_key.strip()
 
@@ -50,6 +53,7 @@ def create_pulumi_program(keydata: str, instance_type=str):
     pulumi.export('public_key', keypair.public_key)
     pulumi.export('public_ip', server.public_ip)
     pulumi.export('public_dns', server.public_dns)
+    
 
 
 @bp.route("/new", methods=["GET", "POST"])
@@ -82,6 +86,7 @@ def create_vm():
         return redirect(url_for("virtual_machines.list_vms"))
 
     current_app.logger.info(f"Instance types: {instance_types}")
+
     return render_template("virtual_machines/create.html", instance_types=instance_types, curr_instance_type=None)
 
 

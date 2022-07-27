@@ -1,4 +1,4 @@
-name: herocool2
+name: ahi-service-starter
 runtime:
   name: python
   options:
