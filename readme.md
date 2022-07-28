@@ -1,5 +1,11 @@
 # Instructions
 
+## .env file structure
+```
+PULUMITOKEN = 
+PULUMIPROJECTNAME = 
+PULUMIORG = 
+```
 
 ## Copy public key from your own computer
 - mac: `pbcopy < ~/.ssh/id_rsa.pub` 

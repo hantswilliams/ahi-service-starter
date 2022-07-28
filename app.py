@@ -14,8 +14,8 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY=config['PULUMITOKEN'],
-        PROJECT_NAME="ahi-service-starter",
-        PULUMI_ORG="hantswilliams",
+        PROJECT_NAME=config['PULUMIPROJECTNAME'],
+        PULUMI_ORG=config['PULUMIORG'],
     )
 
     @app.route("/", methods=["GET"])
